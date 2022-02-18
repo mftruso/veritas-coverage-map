@@ -40,19 +40,18 @@ require(["esri/config", "esri/Map", "esri/views/MapView", "esri/Graphic",
         longitude: -73.434564,
         latitude: 41.115097
      };
-     const simpleMarkerSymbol = {
-        type: "simple-marker",
-        style: "triangle",
-        color: [0, 0, 255],  // Blue
-        outline: {
-            color: [255, 255, 255], // White
-            width: 1
-        }
-     };
+
+    var transmitterMarker = {
+        type: "picture-marker",
+        url: "images/veritas_logo_tower.png",
+        width: 53,
+        height: 62
+      
+      };
     
      const pointGraphic = new Graphic({
         geometry: transmitterPoint,
-        symbol: simpleMarkerSymbol
+        symbol: transmitterMarker
      });
      graphicsLayer.add(pointGraphic);
 
