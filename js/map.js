@@ -35,7 +35,29 @@ require(["esri/config", "esri/Map", "esri/views/MapView", "esri/Graphic",
     });
     graphicsLayer.add(polygonGraphic);
 
+    const transmitterPoint = { //transmitter location
+        type: "point",
+        longitude: -73.434564,
+        latitude: 41.115097
+     };
+     const simpleMarkerSymbol = {
+        type: "simple-marker",
+        style: "triangle",
+        color: [0, 0, 255],  // Blue
+        outline: {
+            color: [255, 255, 255], // White
+            width: 1
+        }
+     };
+    
+     const pointGraphic = new Graphic({
+        geometry: transmitterPoint,
+        symbol: simpleMarkerSymbol
+     });
+     graphicsLayer.add(pointGraphic);
+
 });
+
 
 
 function textToRings() {
