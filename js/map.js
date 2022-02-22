@@ -1,3 +1,6 @@
+import {textToRings} from "./parse";
+
+
 require(["esri/config", "esri/Map", "esri/views/MapView", "esri/Graphic",
     "esri/layers/GraphicsLayer"], function (esriConfig, Map, MapView, Graphic, GraphicsLayer) {
     const map = new Map({
@@ -16,7 +19,7 @@ require(["esri/config", "esri/Map", "esri/views/MapView", "esri/Graphic",
 
     const polygon = {
         type: "polygon",
-        rings: textToRings()
+        rings: textToRings(daytime2mVmRings)
     };
 
     const simpleFillSymbol = {
@@ -58,9 +61,7 @@ require(["esri/config", "esri/Map", "esri/views/MapView", "esri/Graphic",
 });
 
 
-
-function textToRings() {
-    const rings = `<!-- 360 degrees azimuth --> -73.432260,41.214200,0
+    const daytime2mVmRings = `<!-- 360 degrees azimuth --> -73.432260,41.214200,0
     <!-- 359 degrees azimuth --> -73.434560,41.214220,0
     <!-- 358 degrees azimuth --> -73.436860,41.214200,0
     <!-- 357 degrees azimuth --> -73.439160,41.214160,0
@@ -420,11 +421,4 @@ function textToRings() {
     <!-- 3 degrees azimuth --> -73.425370,41.213970,0
     <!-- 2 degrees azimuth --> -73.427670,41.214080,0
     <!-- 1 degrees azimuth --> -73.429970,41.214160,0
-    <!-- 0 degrees azimuth --> -73.432260,41.214200,0`.split('\n').map((line) => {
-        let coords = line.substring(line.indexOf('> ') + 2)
-        coords = coords.slice(0, -2)
-        return coords.split(',').map((it) => Number(it))
-    })
-
-    return rings
-}
+    <!-- 0 degrees azimuth --> -73.432260,41.214200,0`;
