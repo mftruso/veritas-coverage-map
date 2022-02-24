@@ -21,7 +21,7 @@ require([
 ) {
   const localFillSymbol = {
     type: "simple-fill",
-    color: [227, 139, 0, 0.4], // Orange, opacity 40%
+    color: "#cfab9d", 
     outline: {
       color: [255, 255, 255],
       width: 1,
@@ -30,7 +30,7 @@ require([
 
   const distantFillSymbol = {
     type: "simple-fill",
-    color: [127, 0, 255, 0.3], //Purple, opacity 30%
+    color: "#c8a6d2", //Purple, opacity 30%
     outline: {
       color: [255, 255, 255],
       width: 1,
@@ -45,7 +45,7 @@ require([
       },
       symbol: {
         type: "simple-fill",
-        color: [227, 139, 0, 0.4], // Orange, opacity 40%
+        color: [255, 255, 0, 0.4], // Orange, opacity 40%
         outline: {
           color: [255, 255, 255],
           width: 1,
@@ -85,12 +85,12 @@ require([
       {
         objectIdField: 1,
         symbol: localFillSymbol,
-        label: "Local Coverage", // used in the legend to describe features with this symbol
+        label: "Local", // used in the legend to describe features with this symbol
       },
       {
         objectIdField: 2,
         symbol: distantFillSymbol,
-        label: "Distant Coverage", // used in the legend to describe features with this symbol
+        label: "Distant", // used in the legend to describe features with this symbol
       },
     ],
   };
