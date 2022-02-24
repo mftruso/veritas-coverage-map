@@ -1,6 +1,7 @@
 import { textToRings } from "./parse.js";
 import { daytime2mVm } from "./data/daytime2mVm.js";
 import { daytimeHalfmVm } from "./data/daytimeHalfmVm.js";
+import { future } from "./data/future.js";
 
 require([
   "esri/config",
@@ -10,6 +11,7 @@ require([
   "esri/layers/GraphicsLayer",
   "esri/widgets/Legend",
   "esri/layers/FeatureLayer",
+  "esri/widgets/LayerList",
 ], function (
   esriConfig,
   Map,
@@ -17,11 +19,12 @@ require([
   Graphic,
   GraphicsLayer,
   Legend,
-  FeatureLayer
+  FeatureLayer,
+  LayerList
 ) {
   const localFillSymbol = {
     type: "simple-fill",
-    color: "#cfab9d", 
+    color: "#cfab9d",
     outline: {
       color: [255, 255, 255],
       width: 1,
@@ -31,6 +34,15 @@ require([
   const distantFillSymbol = {
     type: "simple-fill",
     color: "#c8a6d2", //Purple, opacity 30%
+    outline: {
+      color: [255, 255, 255],
+      width: 1,
+    },
+  };
+
+  const futureFillSymbol = {
+    type: "simple-fill",
+    color: [0, 255, 0, 0.3], //Purple, opacity 30%
     outline: {
       color: [255, 255, 255],
       width: 1,
@@ -73,6 +85,24 @@ require([
         ObjectID: 2,
       },
     },
+    {
+      geometry: {
+        type: "polygon",
+        rings: textToRings(future),
+      },
+
+      symbol: {
+        type: "simple-fill",
+        color: [0, 255, 0, 0.3], //Purple, opacity 30%
+        outline: {
+          color: [255, 255, 255],
+          width: 1,
+        },
+      },
+      attributes: {
+        ObjectID: 3,
+      },
+    },
   ];
 
   const renderer = {
@@ -92,6 +122,11 @@ require([
         symbol: distantFillSymbol,
         label: "Distant", // used in the legend to describe features with this symbol
       },
+      {
+        objectIdField: 3,
+        symbol: futureFillSymbol,
+        label: "Future", // used in the legend to describe features with this symbol
+      },
     ],
   };
 
@@ -103,6 +138,7 @@ require([
     objectIdField: "ObjectID",
     renderer: renderer,
     title: "Veritas Catholic Media Broadcast Coverage Map",
+    listMode: "hide",
   });
 
   const map = new Map({
@@ -110,7 +146,18 @@ require([
     layers: [coverageLayer],
   });
 
-  const graphicsLayer = new GraphicsLayer();
+  const currentGraphicsLayer = new GraphicsLayer({
+    title: "Current Coverage Map",
+  });
+  const futureGraphicsLayer = new GraphicsLayer({
+    title: "Future Coverage Map",
+    visible: false
+  });
+  const graphicsLayer = new GraphicsLayer({
+    listMode: "hide",
+  });
+  map.add(currentGraphicsLayer);
+  map.add(futureGraphicsLayer);
   map.add(graphicsLayer);
 
   const view = new MapView({
@@ -120,8 +167,9 @@ require([
     container: "viewDiv", // Div element
   });
 
-  graphicsLayer.add(features[0]);
-  graphicsLayer.add(features[1]);
+  currentGraphicsLayer.add(features[0]);
+  currentGraphicsLayer.add(features[1]);
+  futureGraphicsLayer.add(features[2]);
 
   const transmitterPoint = {
     //transmitter location
@@ -154,4 +202,15 @@ require([
 
   // Add widget to the top-left corner of the view
   view.ui.add(legend, "top-left");
+
+  view.when(() => {
+    const layerList = new LayerList({
+      view: view,
+      
+    });
+
+
+    // Add widget to the top right corner of the view
+    view.ui.add(layerList, "bottom-left");
+  });
 });
