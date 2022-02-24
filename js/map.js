@@ -1,7 +1,6 @@
 import {textToRings} from "./parse.js";
 import {daytime2mVm} from "./data/daytime2mVm.js";
 import {daytimeHalfmVm} from "./data/daytimeHalfmVm.js";
-import {nightTime} from "./data/nighttime.js"
 
 
 require(["esri/config", "esri/Map", "esri/views/MapView", "esri/Graphic",
@@ -30,14 +29,10 @@ require(["esri/config", "esri/Map", "esri/views/MapView", "esri/Graphic",
         rings: textToRings(daytimeHalfmVm)
     };
 
-    const fringe = {
-        type: "polygon",
-        rings: textToRings(nightTime)
-    };
 
     const simpleFillSymbol = {
         type: "simple-fill",
-        color: [227, 139, 79, 0.4],  // Orange, opacity 40%
+        color: [227, 139, 0, 0.4],  // Orange, opacity 0%
         outline: {
             color: [255, 255, 255],
             width: 1
@@ -46,21 +41,14 @@ require(["esri/config", "esri/Map", "esri/views/MapView", "esri/Graphic",
 
     const distantFillSymbol = {
         type: "simple-fill",
-        color: [127, 0, 255, 0.4],  // Purple, opacity 40%
+        color: [127, 0, 255, 0.3],  //Purple, opacity 30%
         outline: {
             color: [255, 255, 255],
             width: 1
         }
     };
 
-    const fringeFillSymbol = {
-        type: "simple-fill",
-        color: [0, 0, 255, 0.4],  // Blue, opacity 40%
-        outline: {
-            color: [255, 255, 255],
-            width: 1
-        }
-    };
+
 
     const polygonGraphic = new Graphic({
         geometry: polygon,
@@ -74,13 +62,6 @@ require(["esri/config", "esri/Map", "esri/views/MapView", "esri/Graphic",
 
     });
 
-    const fringeGraphic = new Graphic({
-        geometry: fringe,
-        symbol: fringeFillSymbol,
-
-    });
-
-    graphicsLayer.add(fringeGraphic);
     graphicsLayer.add(distantGraphic);
     graphicsLayer.add(polygonGraphic);
    
