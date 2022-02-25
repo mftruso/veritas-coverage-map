@@ -1,4 +1,4 @@
-import { textToRings } from "./parse.js";
+import { textToRings } from "./parser.js";
 import { daytime2mVm } from "./data/daytime2mVm.js";
 import { daytimeHalfmVm } from "./data/daytimeHalfmVm.js";
 import { future } from "./data/future.js";
@@ -24,7 +24,7 @@ require([
 ) {
   const localFillSymbol = {
     type: "simple-fill",
-    color: [255, 215, 0, 0.4],
+    color: [255, 215, 0, 0.5], // yellow hint of gold
     outline: {
       color: [255, 255, 255],
       width: 1,
@@ -42,18 +42,21 @@ require([
 
   const futureFillSymbol = {
     type: "simple-fill",
-    color: [0, 255, 0, 0.3], //Purple, opacity 30%
+    color: [0, 255, 0, 0.3], //green, opacity 30%
     outline: {
       color: [255, 255, 255],
       width: 1,
     },
   };
 
+  const localRings = textToRings(daytime2mVm);
+  const distantRings = textToRings(daytimeHalfmVm);
+
   const features = [
     {
       geometry: {
         type: "polygon",
-        rings: textToRings(daytime2mVm),
+        rings: localRings,
       },
       symbol: localFillSymbol,
       attributes: {
@@ -63,10 +66,7 @@ require([
     {
       geometry: {
         type: "polygon",
-        rings: [
-          textToRings(daytimeHalfmVm),
-          textToRings(daytime2mVm).reverse(),
-        ],
+        rings: [distantRings, localRings.reverse()],
       },
 
       symbol: distantFillSymbol,
@@ -146,7 +146,7 @@ require([
     type: "unique-value", // autocasts as new UniqueValueRenderer()
     field: "ObjectID",
     legendOptions: {
-      title: "Veritas Catholic Media Broadcast Map",
+      title: "Broadcast Map",
     },
     uniqueValueInfos: [
       {
@@ -177,8 +177,6 @@ require([
     listMode: "hide",
   });
 
-  // features[1].removePoint(textToRings(daytime2mVm));
-
   const map = new Map({
     basemap: "streets-vector", // Basemap layer service
     layers: [coverageLayer],
@@ -189,11 +187,12 @@ require([
   });
   const futureGraphicsLayer = new GraphicsLayer({
     title: "Future Coverage",
-    visible: false,
+    visible: false, // user must click eyeball icon to display
   });
   const graphicsLayer = new GraphicsLayer({
     listMode: "hide",
   });
+
   map.add(currentGraphicsLayer);
   map.add(futureGraphicsLayer);
   map.add(graphicsLayer);
@@ -215,9 +214,8 @@ require([
   futureGraphicsLayer.add(features[7]);
 
   const transmitterPoint = {
-    //transmitter location
     type: "point",
-    longitude: -73.434564,
+    longitude: -73.434564, //transmitter location
     latitude: 41.115097,
   };
 
@@ -232,6 +230,7 @@ require([
     geometry: transmitterPoint,
     symbol: transmitterMarker,
   });
+
   graphicsLayer.add(pointGraphic);
 
   const legend = new Legend({
@@ -243,15 +242,13 @@ require([
     ],
   });
 
-  // Add widget to the top-left corner of the view
+  // Add legend widget to the top-left corner of the view
   view.ui.add(legend, "top-left");
 
-  view.when(() => {
-    const layerList = new LayerList({
-      view: view,
-    });
-
-    // Add widget to the top right corner of the view
-    view.ui.add(layerList, "top-left");
+  const layerList = new LayerList({
+    view: view,
   });
+
+  // Add widget to the top right corner of the view
+  view.ui.add(layerList, "top-left");
 });
