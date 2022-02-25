@@ -63,7 +63,10 @@ require([
     {
       geometry: {
         type: "polygon",
-        rings: [ textToRings(daytimeHalfmVm), textToRings(daytime2mVm).reverse()],
+        rings: [
+          textToRings(daytimeHalfmVm),
+          textToRings(daytime2mVm).reverse(),
+        ],
       },
 
       symbol: distantFillSymbol,
@@ -91,6 +94,50 @@ require([
       symbol: futureFillSymbol,
       attributes: {
         ObjectID: 4,
+      },
+    },
+    {
+      geometry: {
+        type: "polygon",
+        rings: future[2],
+      },
+
+      symbol: futureFillSymbol,
+      attributes: {
+        ObjectID: 5,
+      },
+    },
+    {
+      geometry: {
+        type: "polygon",
+        rings: future[3],
+      },
+
+      symbol: futureFillSymbol,
+      attributes: {
+        ObjectID: 6,
+      },
+    },
+    {
+      geometry: {
+        type: "polygon",
+        rings: future[4],
+      },
+
+      symbol: futureFillSymbol,
+      attributes: {
+        ObjectID: 7,
+      },
+    },
+    {
+      geometry: {
+        type: "polygon",
+        rings: future[5],
+      },
+
+      symbol: futureFillSymbol,
+      attributes: {
+        ObjectID: 8,
       },
     },
   ];
@@ -162,6 +209,10 @@ require([
   currentGraphicsLayer.add(features[1]);
   futureGraphicsLayer.add(features[2]);
   futureGraphicsLayer.add(features[3]);
+  futureGraphicsLayer.add(features[4]);
+  futureGraphicsLayer.add(features[5]);
+  futureGraphicsLayer.add(features[6]);
+  futureGraphicsLayer.add(features[7]);
 
   const transmitterPoint = {
     //transmitter location
