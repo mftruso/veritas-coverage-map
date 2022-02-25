@@ -24,7 +24,7 @@ require([
 ) {
   const localFillSymbol = {
     type: "simple-fill",
-    color: "#cfab9d",
+    color: [255, 215, 0, 0.4],
     outline: {
       color: [255, 255, 255],
       width: 1,
@@ -33,7 +33,7 @@ require([
 
   const distantFillSymbol = {
     type: "simple-fill",
-    color: "#c8a6d2", //Purple, opacity 30%
+    color: [127, 0, 255, 0.3], //Purple, opacity 30%
     outline: {
       color: [255, 255, 255],
       width: 1,
@@ -55,14 +55,7 @@ require([
         type: "polygon",
         rings: textToRings(daytime2mVm),
       },
-      symbol: {
-        type: "simple-fill",
-        color: [255, 255, 0, 0.4], // Orange, opacity 40%
-        outline: {
-          color: [255, 255, 255],
-          width: 1,
-        },
-      },
+      symbol: localFillSymbol,
       attributes: {
         ObjectID: 1,
       },
@@ -70,17 +63,10 @@ require([
     {
       geometry: {
         type: "polygon",
-        rings: textToRings(daytimeHalfmVm),
+        rings: [ textToRings(daytimeHalfmVm), textToRings(daytime2mVm).reverse()],
       },
 
-      symbol: {
-        type: "simple-fill",
-        color: [127, 0, 255, 0.3], //Purple, opacity 30%
-        outline: {
-          color: [255, 255, 255],
-          width: 1,
-        },
-      },
+      symbol: distantFillSymbol,
       attributes: {
         ObjectID: 2,
       },
@@ -88,19 +74,23 @@ require([
     {
       geometry: {
         type: "polygon",
-        rings: textToRings(future),
+        rings: future[0],
       },
 
-      symbol: {
-        type: "simple-fill",
-        color: [0, 255, 0, 0.3], //Purple, opacity 30%
-        outline: {
-          color: [255, 255, 255],
-          width: 1,
-        },
-      },
+      symbol: futureFillSymbol,
       attributes: {
         ObjectID: 3,
+      },
+    },
+    {
+      geometry: {
+        type: "polygon",
+        rings: future[1],
+      },
+
+      symbol: futureFillSymbol,
+      attributes: {
+        ObjectID: 4,
       },
     },
   ];
@@ -109,7 +99,7 @@ require([
     type: "unique-value", // autocasts as new UniqueValueRenderer()
     field: "ObjectID",
     legendOptions: {
-      title: "Coverage Type",
+      title: "Veritas Catholic Media Broadcast Map",
     },
     uniqueValueInfos: [
       {
@@ -137,9 +127,10 @@ require([
     source: features, // autocast as a Collection of new Graphic()
     objectIdField: "ObjectID",
     renderer: renderer,
-    title: "Veritas Catholic Media Broadcast Coverage Map",
     listMode: "hide",
   });
+
+  // features[1].removePoint(textToRings(daytime2mVm));
 
   const map = new Map({
     basemap: "streets-vector", // Basemap layer service
@@ -147,11 +138,11 @@ require([
   });
 
   const currentGraphicsLayer = new GraphicsLayer({
-    title: "Current Coverage Map",
+    listMode: "hide",
   });
   const futureGraphicsLayer = new GraphicsLayer({
-    title: "Future Coverage Map",
-    visible: false
+    title: "Future Coverage",
+    visible: false,
   });
   const graphicsLayer = new GraphicsLayer({
     listMode: "hide",
@@ -170,6 +161,7 @@ require([
   currentGraphicsLayer.add(features[0]);
   currentGraphicsLayer.add(features[1]);
   futureGraphicsLayer.add(features[2]);
+  futureGraphicsLayer.add(features[3]);
 
   const transmitterPoint = {
     //transmitter location
@@ -206,11 +198,9 @@ require([
   view.when(() => {
     const layerList = new LayerList({
       view: view,
-      
     });
 
-
     // Add widget to the top right corner of the view
-    view.ui.add(layerList, "bottom-left");
+    view.ui.add(layerList, "top-left");
   });
 });
