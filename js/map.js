@@ -52,13 +52,12 @@ require([
   const localRings = textToRings(daytime2mVm);
   const distantRings = textToRings(daytimeHalfmVm);
 
-  const features = [
+  const currentFeatures = [
     {
       geometry: {
         type: "polygon",
         rings: localRings,
       },
-      symbol: localFillSymbol,
       attributes: {
         ObjectID: 1,
       },
@@ -66,103 +65,31 @@ require([
     {
       geometry: {
         type: "polygon",
-        rings: [distantRings, localRings.reverse()],
+        rings: [distantRings, localRings],
       },
 
-      symbol: distantFillSymbol,
       attributes: {
         ObjectID: 2,
       },
     },
-    {
-      geometry: {
-        type: "polygon",
-        rings: future[0],
-      },
-
-      symbol: futureFillSymbol,
-      attributes: {
-        ObjectID: 3,
-      },
-    },
-    {
-      geometry: {
-        type: "polygon",
-        rings: future[1],
-      },
-
-      symbol: futureFillSymbol,
-      attributes: {
-        ObjectID: 4,
-      },
-    },
-    {
-      geometry: {
-        type: "polygon",
-        rings: future[2],
-      },
-
-      symbol: futureFillSymbol,
-      attributes: {
-        ObjectID: 5,
-      },
-    },
-    {
-      geometry: {
-        type: "polygon",
-        rings: future[3],
-      },
-
-      symbol: futureFillSymbol,
-      attributes: {
-        ObjectID: 6,
-      },
-    },
-    {
-      geometry: {
-        type: "polygon",
-        rings: future[4],
-      },
-
-      symbol: futureFillSymbol,
-      attributes: {
-        ObjectID: 7,
-      },
-    },
-    {
-      geometry: {
-        type: "polygon",
-        rings: future[5],
-      },
-
-      symbol: futureFillSymbol,
-      attributes: {
-        ObjectID: 8,
-      },
-    },
   ];
 
-  const renderer = {
+  const currentRenderer = {
     type: "unique-value", // autocasts as new UniqueValueRenderer()
     field: "ObjectID",
     legendOptions: {
-      title: "Broadcast Map",
+      title: " ",
     },
     uniqueValueInfos: [
       {
-        objectIdField: 1,
+        value: 1,
         symbol: localFillSymbol,
         label: "Local", // used in the legend to describe features with this symbol
       },
       {
-        objectIdField: 2,
+        value: 2,
         symbol: distantFillSymbol,
         label: "Distant", // used in the legend to describe features with this symbol
-      },
-      {
-        objectIdField: 3,
-        symbol: futureFillSymbol,
-        label: "Future", // used in the legend to describe features with this symbol
       },
     ],
   };
@@ -170,31 +97,84 @@ require([
   // geometryType and spatialReference of the layer
   // will be inferred from the first feature in the array
   // if it has a geometry.
-  const coverageLayer = new FeatureLayer({
-    source: features, // autocast as a Collection of new Graphic()
+  const currentCoverageLayer = new FeatureLayer({
+    source: currentFeatures, // autocast as a Collection of new Graphic()
     objectIdField: "ObjectID",
-    renderer: renderer,
+    title: "Coverage Map",
+    renderer: currentRenderer,
     listMode: "hide",
+  });
+  const futureFeatures = [
+    {
+      geometry: {
+        type: "polygon",
+        rings: future[0],
+      },
+    },
+    {
+      geometry: {
+        type: "polygon",
+        rings: future[1],
+      },
+    },
+    {
+      geometry: {
+        type: "polygon",
+        rings: future[2],
+      },
+    },
+    {
+      geometry: {
+        type: "polygon",
+        rings: future[3],
+      },
+    },
+    {
+      geometry: {
+        type: "polygon",
+        rings: future[4],
+      },
+    },
+    {
+      geometry: {
+        type: "polygon",
+        rings: future[5],
+      },
+    },
+  ];
+
+  const futureRenderer = {
+    type: "unique-value", // autocasts as new UniqueValueRenderer()
+    field: "ObjectID",
+    defaultSymbol: futureFillSymbol,
+    defaultLabel: "Future", 
+    legendOptions: {
+      title: " ",
+    },
+
+    uniqueValueInfos: [],
+  };
+
+  // geometryType and spatialReference of the layer
+  // will be inferred from the first feature in the array
+  // if it has a geometry.
+  const futureCoverageLayer = new FeatureLayer({
+    source: futureFeatures, // autocast as a Collection of new Graphic()
+    objectIdField: "ObjectID",
+    renderer: futureRenderer,
+    title: "Future Coverage",
+    visible: false, // user must click eyeball icon to display
   });
 
   const map = new Map({
     basemap: "streets-vector", // Basemap layer service
-    layers: [coverageLayer],
+    layers: [futureCoverageLayer, currentCoverageLayer],
   });
 
-  const currentGraphicsLayer = new GraphicsLayer({
-    listMode: "hide",
-  });
-  const futureGraphicsLayer = new GraphicsLayer({
-    title: "Future Coverage",
-    visible: false, // user must click eyeball icon to display
-  });
   const graphicsLayer = new GraphicsLayer({
     listMode: "hide",
   });
 
-  map.add(currentGraphicsLayer);
-  map.add(futureGraphicsLayer);
   map.add(graphicsLayer);
 
   const view = new MapView({
@@ -203,15 +183,6 @@ require([
     zoom: 9, // Zoom level
     container: "viewDiv", // Div element
   });
-
-  currentGraphicsLayer.add(features[0]);
-  currentGraphicsLayer.add(features[1]);
-  futureGraphicsLayer.add(features[2]);
-  futureGraphicsLayer.add(features[3]);
-  futureGraphicsLayer.add(features[4]);
-  futureGraphicsLayer.add(features[5]);
-  futureGraphicsLayer.add(features[6]);
-  futureGraphicsLayer.add(features[7]);
 
   const transmitterPoint = {
     type: "point",
@@ -235,9 +206,14 @@ require([
 
   const legend = new Legend({
     view: view,
+
     layerInfos: [
       {
-        layer: coverageLayer,
+        layer: futureCoverageLayer,
+        title: " ",
+      },
+      {
+        layer: currentCoverageLayer,
       },
     ],
   });
