@@ -24,7 +24,7 @@ require([
 ) {
   const localFillSymbol = {
     type: "simple-fill",
-    color: [255, 215, 0, 0.5], // yellow hint of gold
+    color: [82, 117, 114, 0.5], // #527572
     outline: {
       color: [255, 255, 255],
       width: 1,
@@ -33,7 +33,7 @@ require([
 
   const distantFillSymbol = {
     type: "simple-fill",
-    color: [127, 0, 255, 0.3], //Purple, opacity 30%
+    color: [188, 209, 207, 0.3], // #bcd1cf
     outline: {
       color: [255, 255, 255],
       width: 1,
@@ -42,7 +42,7 @@ require([
 
   const futureFillSymbol = {
     type: "simple-fill",
-    color: [0, 255, 0, 0.3], //green, opacity 30%
+    color: [168, 158, 144, 0.3], // grey #A69E90
     outline: {
       color: [255, 255, 255],
       width: 1,
@@ -147,7 +147,7 @@ require([
     type: "unique-value", // autocasts as new UniqueValueRenderer()
     field: "ObjectID",
     defaultSymbol: futureFillSymbol,
-    defaultLabel: "Future", 
+    defaultLabel: "Future",
     legendOptions: {
       title: " ",
     },
@@ -180,7 +180,7 @@ require([
   const view = new MapView({
     map: map,
     center: [-73.434564, 41.115097], // transmitter location
-    zoom: 9, // Zoom level
+    zoom: 8, // Zoom level
     container: "viewDiv", // Div element
   });
 
