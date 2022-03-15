@@ -1,5 +1,5 @@
 <template>
-<div id="coverageMapWrapper"></div>
+    <div id="coverageMapWrapper"></div>
 </template>
 
 <script>
@@ -184,16 +184,16 @@ export default {
                 latitude: 41.115097,
             };
 
-            const transmitterMarker = {
-                type: "picture-marker",
-                url: require("@/assets/veritas_logo_tower.png"),
-                width: 53,
-                height: 62,
-            };
+            // const transmitterMarker = {
+            //     type: "picture-marker",
+            //     url: require("@/assets/veritas_logo_tower.png"),
+            //     width: 53,
+            //     height: 62,
+            // };
 
             const pointGraphic = new Graphic({
                 geometry: transmitterPoint,
-                symbol: transmitterMarker,
+                // symbol: transmitterMarker,
             });
 
             graphicsLayer.add(pointGraphic);
@@ -232,10 +232,10 @@ export default {
 <style scoped>
 @import "https://js.arcgis.com/4.22/@arcgis/core/assets/esri/themes/light/main.css";
 
-    #coverageMapWrapper {
-        padding: 0;
-        margin: 0;
-        height: 100%;
-        width: 100%;
-    }
+#coverageMapWrapper {
+    padding: 0;
+    margin: 0;
+    height: 100%;
+    width: 100%;
+}
 </style>
