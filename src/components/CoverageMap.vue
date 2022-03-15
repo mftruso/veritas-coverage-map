@@ -184,16 +184,16 @@ export default {
                 latitude: 41.115097,
             };
 
-            // const transmitterMarker = {
-            //     type: "picture-marker",
-            //     url: require("@/assets/veritas_logo_tower.png"),
-            //     width: 53,
-            //     height: 62,
-            // };
+            const transmitterMarker = {
+                type: "picture-marker",
+                url: require("@/assets/veritas_logo_tower.png"),
+                width: 53,
+                height: 62,
+            };
 
             const pointGraphic = new Graphic({
                 geometry: transmitterPoint,
-                // symbol: transmitterMarker,
+                symbol: transmitterMarker,
             });
 
             graphicsLayer.add(pointGraphic);
