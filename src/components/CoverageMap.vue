@@ -4,7 +4,6 @@
 
 <script>
 import Graphic from "@arcgis/core/Graphic";
-import {textToRings} from "@/util/parser";
 import {daytime2mVm} from "@/data/daytime2mVm";
 import {daytimeHalfmVm} from "@/data/daytimeHalfmVm";
 import FeatureLayer from "@arcgis/core/layers/FeatureLayer";
@@ -46,9 +45,7 @@ export default {
                 },
             };
 
-            const localRings = textToRings(daytime2mVm);
-            const distantRings = textToRings(daytimeHalfmVm);
-
+            const localRings = daytime2mVm;
             const currentFeatures = [
                 {
                     geometry: {
@@ -62,7 +59,7 @@ export default {
                 {
                     geometry: {
                         type: "polygon",
-                        rings: [distantRings, localRings],
+                        rings: [daytimeHalfmVm, localRings],
                     },
 
                     attributes: {
